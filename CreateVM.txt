@@ -1,0 +1,7 @@
+Let's look for a CentOS 64 template
+# xe template-list| grep name-label | grep CentOS|grep 64
+
+Create the VM but note it will not have any interfaces.
+# xe vm-install template="CentOS 6 (64-bit)" new-name-label="dp-test"
+49afb3f1-0eb3-3c22-9080-73a6e57af9b9
+
