@@ -1,0 +1,283 @@
+[root@xen-qa-2 ~]# xe template-list
+uuid ( RO)                : 2f1ed3c4-44c3-de0f-5fd4-23a21858da12
+          name-label ( RW): SUSE Linux Enterprise Server 11 SP3 (32-bit)
+    name-description ( RW): Template that allows VM installation from Xen-aware SLES-based distros. To use this template from the CLI, install your VM using vm-install, then set other-config-install-repository to the path to your network repository, e.g. http://<server>/<path> or nfs:server:/<path>
+
+...
+
+uuid ( RO)                : 89671a04-38b5-4cc2-d938-a500246d57e4
+          name-label ( RW): Red Hat Enterprise Linux 7
+    name-description ( RW): To use this template from the CLI, install your VM using vm-install, then set other-config-install-repository to the path to your network repository, e.g. http://<server>/<path> or nfs:server:/<path>
+
+
+uuid ( RO)                : e839c24f-7d28-fed8-ff67-9f5e6e827a95
+          name-label ( RW): Other install media
+    name-description ( RW): Template which allows VM installation from install media
+
+
+[root@xen-qa-2 ~]# xe template-list| grep name-label
+          name-label ( RW): SUSE Linux Enterprise Server 11 SP3 (32-bit)
+          name-label ( RW): Windows Vista (32-bit)
+          name-label ( RW): SUSE Linux Enterprise Server 11 SP2 (64-bit)
+          name-label ( RW): Oracle Enterprise Linux 6 (64-bit)
+          name-label ( RW): CentOS 7
+          name-label ( RW): Red Hat Enterprise Linux 6 (32-bit)
+...
+          name-label ( RW): Ubuntu Precise Pangolin 12.04 (32-bit)
+          name-label ( RW): GPP-GW-IPSec
+          name-label ( RW): CentOS 6 (32-bit)
+          name-label ( RW): Red Hat Enterprise Linux 7
+          name-label ( RW): Other install media
+
+# Create the new VM called dp-test with just a template but no interfaces.
+#
+[root@xen-qa-2 ~]# xe vm-install template="CentOS 6 (64-bit)" new-name-label="dp-test"
+49afb3f1-0eb3-3c22-9080-73a6e57af9b9
+
+[root@xen-qa-2 ~]# name="dp-test"
+
+[root@xen-qa-2 ~]# xe cd-list
+uuid ( RO)          : c5982319-5df4-4bb4-89fb-3586ba879384
+    name-label ( RW): SCSI 1:0:0:0
+
+
+uuid ( RO)          : 8ea14901-0d51-4909-8293-4d587b792c81
+    name-label ( RW): kali-linux-1.0.6-amd64.iso
+
+...
+
+uuid ( RO)          : 800ebd13-4c01-46c5-946b-a195f8b54f57
+    name-label ( RW): xs-tools.iso
+
+
+uuid ( RO)          : 7cb0f457-08be-4bde-95ec-b355faade454
+    name-label ( RW): XenCenter.iso
+
+
+[root@xen-qa-2 ~]# xe cd-list|grep name-label
+    name-label ( RW): SCSI 1:0:0:0
+    name-label ( RW): debian-8.1.0-amd64-netinst.iso
+    name-label ( RW): turnkey-sugarcrm-13.0-wheezy-amd64.iso
+    name-label ( RW): Fedora-17-x86_64-DVD.iso
+    name-label ( RW): debian-live-8.6.0-amd64-lxde-desktop.iso
+...
+    name-label ( RW): Fedora-19-i386-DVD.iso
+    name-label ( RW): SL-6.6-x86_64-2014-11-05-Everything-DVD1.iso
+    name-label ( RW): Fedora-17-x86_64-Live-Desktop.iso
+    name-label ( RW): xs-tools.iso
+    name-label ( RW): XenCenter.iso
+
+[root@xen-qa-2 ~]# xe cd-list|grep name-label|grep CentOS-6.5|grep 64
+    name-label ( RW): CentOS-6.5-x86_64-bin-DVD2.iso
+    name-label ( RW): CentOS-6.5-x86_64-netinstall.iso
+    name-label ( RW): CentOS-6.5-x86_64-LiveCD.iso
+    name-label ( RW): CentOS-6.5-x86_64-bin-DVD1.iso
+
+[root@xen-qa-2 ~]# ISO=CentOS-6.5-x86_64-netinstall.iso
+
+[root@xen-qa-2 ~]# xe network-list 
+uuid ( RO)                : 94c96cda-27cc-6287-46f2-6c3e352b7a01
+          name-label ( RW): LL1
+    name-description ( RW): 
+              bridge ( RO): xapi1
+
+
+uuid ( RO)                : 025d6ca2-bf7d-8e99-8478-057a68719e1b
+          name-label ( RW): LLH
+    name-description ( RW): Created by Harry
+              bridge ( RO): xapi4
+
+
+uuid ( RO)                : 89c16518-6b47-0239-63c5-1d829e8b9bdf
+          name-label ( RW): Network 3;10.40
+    name-description ( RW): 10.40.x.x
+              bridge ( RO): xenbr3
+
+
+uuid ( RO)                : ebf5e8cc-a71e-c8d4-3c84-d0d7a45b9928
+          name-label ( RW): Network 0; 10.20
+    name-description ( RW): 10.20.x.x
+              bridge ( RO): xenbr0
+
+
+uuid ( RO)                : 1243d7bb-eda2-7182-4679-ed141455358b
+          name-label ( RW): Network 1;10.30
+    name-description ( RW): 10.30.x.x
+              bridge ( RO): xenbr1
+
+
+uuid ( RO)                : a47147e6-78b2-bc57-5173-27adf7d3efc0
+          name-label ( RW): wuwu-HA
+    name-description ( RW): 
+              bridge ( RO): xapi3
+
+
+uuid ( RO)                : 94a3d208-cf57-43e0-bad0-d9c2241b2d9a
+          name-label ( RW): Network 2;10.60
+    name-description ( RW): 10.60.x.x
+              bridge ( RO): xenbr2
+
+
+uuid ( RO)                : f2513ac7-52cf-0796-6aca-525f3adc5910
+          name-label ( RW): Host internal management network
+    name-description ( RW): Network on which guests will be assigned a private link-local IP address which can be used to talk XenAPI
+              bridge ( RO): xenapi
+
+
+uuid ( RO)                : 09196811-6e19-434f-cc3f-a81e18618957
+          name-label ( RW): another10.10.40.x
+    name-description ( RW): temporary use by lulu 
+              bridge ( RO): xapi5
+
+
+uuid ( RO)                : 04a8cb9e-4b8c-9a62-0384-1f94c2b7be23
+          name-label ( RW): Pool-wide network associated with eth4
+    name-description ( RW): 110.0.70.x
+              bridge ( RO): xenbr4
+
+
+uuid ( RO)                : c71b9fbb-fce6-3f39-8134-ccbb2799d69d
+          name-label ( RW): rara-HA
+    name-description ( RW): 
+              bridge ( RO): xapi2
+
+# Get the UUID of all networks you will want to connect to for the VM.
+#
+[root@xen-qa-2 ~]# net6=`xe network-list name-description=10.60.x.x params=uuid --minimal`
+[root@xen-qa-2 ~]# net2=`xe network-list name-description=10.20.x.x params=uuid --minimal`
+[root@xen-qa-2 ~]# net3=`xe network-list name-description=10.30.x.x params=uuid --minimal`
+[root@xen-qa-2 ~]# net4=`xe network-list name-description=10.40.x.x params=uuid --minimal`
+
+[root@xen-qa-2 ~]# xe vm-disk-list vm=dp-test 
+Disk 0 VBD:
+uuid ( RO)             : 76e3295a-6f9e-d5b0-10db-62d450c92ad3
+    vm-name-label ( RO): dp-test
+       userdevice ( RW): 0
+
+
+Disk 0 VDI:
+uuid ( RO)             : 682d1a01-e258-4150-85ab-60a0201756e7
+       name-label ( RW): 0
+    sr-name-label ( RO): Local storage
+     virtual-size ( RO): 8589934592
+
+
+[root@xen-qa-2 ~]# xe vm-disk-list vm=dp-test vdi-params=uuid
+Disk 0 VBD:
+uuid ( RO)             : 76e3295a-6f9e-d5b0-10db-62d450c92ad3
+    vm-name-label ( RO): dp-test
+       userdevice ( RW): 0
+
+
+Disk 0 VDI:
+uuid ( RO)    : 682d1a01-e258-4150-85ab-60a0201756e7  <--- I want this one
+
+
+[root@xen-qa-2 ~]# vdi=`xe vm-disk-list vm=dp-test vdi-params=uuid --minimal| cut -d , -f1`
+[root@xen-qa-2 ~]# echo $vdi
+682d1a01-e258-4150-85ab-60a0201756e7
+
+[root@xen-qa-2 ~]# echo $ISO
+CentOS-6.5-x86_64-netinstall.iso
+
+# Add the ISO to the virtual CD on the VM.
+#
+[root@xen-qa-2 ~]# xe vm-cd-add uuid=$vmuuid cd-name=$ISO device=1
+
+# Check state of the VM.
+#
+[root@xen-qa-2 ~]# xe vm-list name-label=dp-test 
+uuid ( RO)           : 49afb3f1-0eb3-3c22-9080-73a6e57af9b9
+     name-label ( RW): dp-test
+    power-state ( RO): halted
+
+# Set the boot order so you can boot from hard disk and then CD.
+#
+[root@xen-qa-2 ~]# xe vm-param-set HVM-boot-policy="BIOS order" uuid=$vmuuid
+
+# Add each interface as subsequent devices.
+#
+[root@xen-qa-2 ~]# xe vif-create vm-uuid=$vmuuid network-uuid=$net6 device=0
+f073a197-2a05-8597-0a5d-c3917adcaf87
+[root@xen-qa-2 ~]# xe vif-create vm-uuid=$vmuuid network-uuid=$net2 device=1
+d264368c-ae60-e172-5070-3a15ed1ad3c3
+[root@xen-qa-2 ~]# xe vif-create vm-uuid=$vmuuid network-uuid=$net3 device=2
+21d81e84-da83-e27e-9e98-3aae413fa736
+[root@xen-qa-2 ~]# xe vif-create vm-uuid=$vmuuid network-uuid=$net4 device=3
+967962db-bfb2-a1ce-2c4a-2cab1abdb08a
+
+# Resize the disk to 40G.
+#
+[root@xen-qa-2 ~]# xe vdi-resize uuid=$vdi disk-size=40GiB
+
+# Set the memory to 1G min, 4G max.
+#
+[root@xen-qa-2 ~]# xe vm-memory-limits-set dynamic-max=4GiB dynamic-min=2GiB static-max=4GiB static-min=1GiB uuid=$vmuuid
+
+# Set 1 core per socket and 4 vCPUs.
+#
+[root@xen-qa-2 ~]# xe vm-param-set platform:cores-per-socket=1 uuid=$vmuuid
+[root@xen-qa-2 ~]# xe vm-param-set VCPUs-at-startup=4 uuid=$vmuuid VCPUs-max=4
+
+# Set the description to something useful for later reference.
+#
+[root@xen-qa-2 ~]# xe vm-param-set uuid=$vmuuid name-description="By dperiquet for testing 3/14/2017" 
+[root@xen-qa-2 ~]# xe vm-param-get uuid=$vmuuid param-name=name-description 
+By dperiquet for testing 3/14/2017
+
+[root@xen-qa-2 ~]# xe vm-param-list uuid=$vmuuid
+
+# I defined a custom field in Xen Center as aType=testing.  This is how you can view it.
+#
+[root@xen-qa-2 ~]# xe vm-param-get uuid=$vmuuid param-name=other-config 
+XenCenter.CustomFields.aType: testing; base_template_name: CentOS 6 (64-bit); mac_seed: 6199f5fa-7d2a-8762-289f-50f933a52382; linux_template: true; install-methods: cdrom,nfs,http,ftp; rhel6: true; install-distro: rhlike
+
+# TIP: put it all on one line to avoid the extra step to get the VM UUID.
+#
+xe vm-param-set name-label=VM-NEW-NAME uuid=`xe vm-list name-label=<vm-actual-name> --minimal`
+
+# Start the VM and then it shows up in the list of domains.
+#
+[root@xen-qa-2 ~]# xe vm-start uuid=$vmuuid
+[root@xen-qa-2 ~]# list_domains |grep $vmuuid
+ 3 | 49afb3f1-0eb3-3c22-9080-73a6e57af9b9 |    B H
+
+# Get the vnc port from the domain id directory.
+#
+[root@xen-qa-2 ~]# DOMID=`list_domains | grep $vmuuid | awk '{ print $1 }'`
+[root@xen-qa-2 ~]# xenstore-read /local/domain/$DOMID/console/vnc-port
+5903
+
+# On some machine with vncviewer, run this to get at the vnc console
+# The -via requires login to x.x.x.x where x.x.x.x is where you'll show the display
+#
+vncviewer -via root@x.x.x.x localhost:3
+
+# Insert a disk into the CD drive
+#
+[root@xen-qa-2 ~]# xe vm-cd-insert uuid=$vmuuid cd-name=$ISO
+
+# Eject current CD.
+#
+[root@xen-qa-2 ~]# xe vm-cd-eject uuid=$vmuuid
+
+# Insert new CD.
+#
+[root@xen-qa-2 ~]# xe vm-cd-insert uuid=$vmuuid cd-name=$ISO
+
+# Reboot the VM.
+#
+[root@xen-qa-2 ~]# xe vm-reboot vm=dp-test 
+
+# Look for CPU down to zero to know installation is done -- 4th field.
+#
+[root@xen-qa-2 ~]# xentop -b | grep dp-test
+   dp-test --b---        314    0.0    4194304   25.0    4195328      25.0     4    0        0        0    0        0        0        0          0          0    0
+   dp-test --b---        314    0.2    4194304   25.0    4195328      25.0     4    4      568        0    0        0        0        0          0          0    0
+   dp-test --b---        314    0.3    4194304   25.0    4195328      25.0     4    4      571        0    0        0        0        0          0          0    0
+   dp-test --b---        314    0.3    4194304   25.0    4195328      25.0     4    0        0        0    0        0        0        0          0          0    0
+
+# Reboot the VM.
+#
+[root@xen-qa-2 ~]# xe vm-reboot vm=dp-test 
+
