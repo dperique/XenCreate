@@ -6,6 +6,8 @@ if [ "$1" == "" ]; then
   echo ""
   echo "  get_vnc.sh <name of VM>"
   echo ""
+  echo "Will obtain the VNC port for the console of the given VM"
+  echo ""
   exit
 fi
 
@@ -28,3 +30,6 @@ domid=`list_domains | grep $uuid | awk {'print $1'}`
 #
 vncPort=`xenstore-read /local/domain/$domid/console/vnc-port`
 echo $vncPort
+echo ""
+echo "Do this on your other machine: vncviewer -via root@xxxx 127.0.0.1:x"
+
