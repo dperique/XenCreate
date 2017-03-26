@@ -1,0 +1,17 @@
+To export a VM in Xen, you can use XenCenter.  But for some reason, it's slow and you have to use a GUI.
+You can do the export via the bash command line using the 'xe' commands.
+
+get the uuid using: myuuid=`xe vm-list name-label=my_vm params=uuid --minimal`
+make a snapshot of it for export: ex_uuid=`xe vm-snapshot uuid=$myuuid new-name-label=my_vm_for_export`
+make it not a template: xe template-param-set is-a-template=false ha-always-run=false uuid=$ex_uuid
+cd to the place you want to export it to (usually an NFS mount): cd /mnt/export_vm_area
+export the VM: xe vm-export vm=$ex_uuid filename=theExportedVM
+wait some number of minutes depending on VM disk size
+Just to be safe, verify the size using 'ls -l'
+
+Say you want to import it somewhere:
+
+ssh to the Xen server to where you want to import
+mount and cd to the place where the exported VM resides: mount /mnt/export_vm_area ; cd /mnt/export_vm_area
+xe vm-import filename=theExportedVM
+The VM will now show up in the XenCenter GUI
